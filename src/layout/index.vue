@@ -103,6 +103,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#components-layout-demo-top-side-2 {
+  height: 100%;
+  width: 100%;
+}
 #components-layout-demo-top-side-2 .logo {
   width: 120px;
   height: 31px;
