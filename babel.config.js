@@ -5,7 +5,7 @@ module.exports = {
     [
       "import",
       // style 为 true 加载 less文件
-      { libraryName: "ant-design-vue", libraryDirectory: "es", style: "css" },
-    ],
-  ],
+      { libraryName: "ant-design-vue", libraryDirectory: "es", style: "css" }
+    ]
+  ]
 };

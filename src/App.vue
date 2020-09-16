@@ -1,19 +1,19 @@
 <template>
-  <div id="app">
-    <Layout />
-  </div>
+  <Layout />
 </template>
+
 <script>
 import Layout from '@/layout/index'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    Layout,
-  },
+    Layout
+  }
 })
 </script>
-<style>
+
+<style lang="less">
 #app {
   width: 100%;
   height: 100%;
