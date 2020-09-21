@@ -1,56 +1,35 @@
 <template>
-  <a-layout id="components-layout-demo-top-side-2">
+  <a-layout id="layout">
     <a-layout-header class="header">
       <div class="logo" />
-      <a-menu
-        theme="dark"
-        mode="horizontal"
-        v-model:selectedKeys="selectedKeys1"
-        :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">nav 1</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
-      </a-menu>
     </a-layout-header>
     <a-layout>
-      <a-layout-sider width="200" style="background: #fff">
+      <a-layout-sider width="200" style="background: #fff" v-model:collapsed="collapsed" :trigger="null">
         <a-menu
           mode="inline"
           v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
+          :inline-collapsed="collapsed"
+          @click="goRouter"
         >
-          <a-sub-menu key="sub1">
-            <template v-slot:title>
-              <span> <user-outlined />subnav 1 </span>
-            </template>
-            <a-menu-item key="1">option1</a-menu-item>
-            <a-menu-item key="2">option2</a-menu-item>
-            <a-menu-item key="3">option3</a-menu-item>
-            <a-menu-item key="4">option4</a-menu-item>
-          </a-sub-menu>
-          <a-sub-menu key="sub2">
-            <template v-slot:title>
-              <span> <laptop-outlined />subnav 2 </span>
-            </template>
-            <a-menu-item key="5">option5</a-menu-item>
-            <a-menu-item key="6">option6</a-menu-item>
-            <a-menu-item key="7">option7</a-menu-item>
-            <a-menu-item key="8">option8</a-menu-item>
-          </a-sub-menu>
-          <a-sub-menu key="sub3">
-            <template v-slot:title>
-              <span> <notification-outlined />subnav 3 </span>
-            </template>
-            <a-menu-item key="9">option9</a-menu-item>
-            <a-menu-item key="10">option10</a-menu-item>
-            <a-menu-item key="11">option11</a-menu-item>
-            <a-menu-item key="12">option12</a-menu-item>
-          </a-sub-menu>
+          <a-menu-item v-for="item in routes.state" :key="item.path">
+            <PieChartOutlined />
+            <span>
+              {{ item.name }}
+              <!-- <router-link :to=item.path >{{ item.name }}</router-link> -->
+            </span>
+          </a-menu-item>
         </a-menu>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
+        <div>
+          <menu-unfold-outlined
+            v-if="collapsed"
+            class="trigger"
+            @click="toggleCollapsed"
+          />
+          <menu-fold-outlined v-else class="trigger" @click="toggleCollapsed" />
+        </div>
         <a-breadcrumb style="margin: 16px 0">
           <a-breadcrumb-item>Home</a-breadcrumb-item>
           <a-breadcrumb-item>List</a-breadcrumb-item>
@@ -71,46 +50,80 @@
   </a-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script>
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined
+  PieChartOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined
 } from '@ant-design/icons-vue'
+import routess from '../router/index'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
-    const selectedKeys1 = ref(['2'])
-    const selectedKeys2 = ref(['1'])
-    const collapsed = ref(false)
-    const openKeys = ref(['sub1'])
+    const selectedKeys2 = ref(['/'])
 
+    const collapsed = ref(false)
+    const toggleCollapsed = () => {
+      collapsed.value = !collapsed.value
+    }
+
+    const routes = reactive({ state: {}})
+    onMounted(() => {
+      routes.state = routess.getRoutes()
+    })
+
+    const router = useRouter()
+    function goRouter(data) {
+      // console.log(data)
+      router.push({
+        path: data.key
+      })
+    }
     return {
-      selectedKeys1,
       selectedKeys2,
       collapsed,
-      openKeys
+      toggleCollapsed,
+      routes,
+      goRouter
     }
   },
   components: {
-    UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined
+    PieChartOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined
   }
 })
 </script>
 
 <style scoped lang="less">
-#components-layout-demo-top-side-2 {
+#layout {
   height: 100%;
   width: 100%;
 }
-#components-layout-demo-top-side-2 .logo {
+#layout .logo {
   width: 120px;
   height: 31px;
   background: rgba(255, 255, 255, 0.2);
   margin: 16px 28px 16px 0;
   float: left;
+}
+#components-layout-demo-custom-trigger .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+#components-layout-demo-custom-trigger .trigger:hover {
+  color: #1890ff;
+}
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
 }
 </style>
