@@ -15,7 +15,7 @@
           <a-menu-item v-for="item in routes.state" :key="item.path">
             <PieChartOutlined />
             <span>
-              {{ item.name }}
+              {{ item.meta.title }}
               <!-- <router-link :to=item.path >{{ item.name }}</router-link> -->
             </span>
           </a-menu-item>
